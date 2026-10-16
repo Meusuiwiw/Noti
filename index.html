@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Instagram Report Tool</title>
+
+<style>
+:root {
+    --bg-color: #f5f6fa;
+    --text-color: #111111;
+    --subtext-color: #606060;
+    --header-bg: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --page1-bg: radial-gradient(circle at top, #e0e8ff 0%, #f5f6fa 70%);
+    --container-bg: rgba(255, 255, 255, 0.9);
+    --container-border: #d1d5db;
+    --input-bg: rgba(240, 240, 245, 0.9);
+    --input-border: rgba(200, 200, 205, 0.4);
+    --input-text: #111111;
+    --popup-bg: #ffffff;
+    --popup-border: rgba(0, 0, 0, 0.1);
+    --popup-text: #111111;
+    --item-icon-bg: #f0f0f5;
+    --logo-bg: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #000000;
+        --text-color: #ffffff;
+        --subtext-color: #8e8e93;
+        --header-bg: #000000;
+        --border-color: rgba(255, 255, 255, 0.15);
+        --page1-bg: radial-gradient(circle at top, #120024 0%, #000000 70%);
+        --container-bg: rgba(10, 10, 10, 0.9);
+        --container-border: rgba(255, 255, 255, 0.15);
+        --input-bg: rgba(20, 20, 20, 0.9);
+        --input-border: rgba(255, 255, 255, 0.2);
+        --input-text: #ffffff;
+        --popup-bg: #1c1c1e;
+        --popup-border: rgba(255, 255, 255, 0.06);
+        --popup-text: #ffffff;
+        --item-icon-bg: #121218;
+        --logo-bg: #ffffff;
+    }
+}
+
+html, body {
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    touch-action: pan-y;
+    color-scheme: light dark;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Android/iOS safe-area and modern viewport compatibility. */
+@supports (height: 100dvh) {
+    .page, .page-center-wrap, #pageReports, #page3 {
+        height: 100dvh;
+        min-height: 100dvh;
+    }
+}
+
+@supports (padding: env(safe-area-inset-top)) {
+    .header {
+        padding-top: calc(12px + env(safe-area-inset-top));
+    }
+    .bottom-dock {
+        height: calc(60px + env(safe-area-inset-bottom));
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    .page-center-wrap {
+        padding-bottom: calc(90px + env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 380px) {
+    .page-center-wrap {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    .container {
+        padding: 16px;
+        border-radius: 20px;
+    }
+    .neon-circles-row {
+        gap: 20px;
+    }
+}
+
+.page {
+    display: none;
+    height: 100vh;
+    height: 100dvh;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+    background: var(--bg-color);
+    z-index: 10;
+    -webkit-overflow-scrolling: touch;
+}
+
+.page.active {
+    display: block !important;
+}
+
+#page3 {
+    will-change: transform;
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+#pageReports, .page-center-wrap {
+    will-change: transform;
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    min-height: 44px;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    background: var(--header-bg);
+    z-index: 100;
+    font-weight: 600;
+}
+
+.back-arrow {
+    font-size: 20px;
+    position: absolute;
+    left: 10px;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.title {
+    flex: 1;
+    text-align: center;
+    font-size: 18px;
+    color: var(--text-color);
+}
+
+.page-center-wrap {
+    background: var(--page1-bg);
+    padding: 20px;
+    padding-bottom: 90px;
+    display: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.page-center-wrap.active {
+    display: flex !important;
+}
+
+.container {
+    background: var(--container-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 20px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 360px;
+    border: 1px solid var(--container-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
+}
+
+.top-heading {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: var(--text-color);
+    letter-spacing: 1px;
+}
+
+label {
+    font-size: 11px;
+    color: var(--subtext-color);
+    font-weight: 700;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    color: var(--input-text);
+    box-sizing: border-box;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, select:focus {
+    border-color: var(--text-color);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+button#submitBtn, .save-assets-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--text-color) 0%, var(--subtext-color) 100%);
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--bg-color);
+    margin-top: 18px;
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.save-assets-btn {
+    margin-top: 16px;
+}
+
+.neon-circles-row {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 15px 0 5px 0;
+}
+
+.neon-circle-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.neon-circle {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--item-icon-bg);
+    border: 2px dashed var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.neon-circle .plus-badge {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: var(--text-color);
+    color: var(--bg-color);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.neon-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.neon-circle-label {
+    font-size: 11px;
+    color: var(--subtext-color);
+    margin-top: 6px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.bottom-dock {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: var(--header-bg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+    box-sizing: border-box;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dock-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    cursor: pointer;
+    color: var(--subtext-color);
+    font-size: 11px;
+    font-weight: 500;
+    gap: 3px;
+    transition: color 0.2s;
+}
+
+.dock-item.active, .dock-item:hover {
+    color: var(--text-color);
+}
+
+#pageReports {
+    display: none;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    box-sizing: border-box;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+#pageReports.active {
+    display: flex !important;
+}
+#pageReports .header {
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+#pageReports .back-arrow {
+    color: var(--text-color);
+    font-size: 26px;
+}
+#pageReports .title {
+    color: var(--text-color);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#page3 {
+    padding: 0 !important;
+    display: none;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+#page3.active {
+    display: flex !important;
+}
+#page3 .header {
+    position: relative;
+    padding: 12px 12px;
+    min-height: 40px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--header-bg);
+}
+.page3-back {
+    position: absolute;
+    left: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    color: var(--text-color);
+}
+#page3 .title {
+    color: var(--text-color);
+    font-size: 16px;
+    font-weight: 600;
+}
+.status-bar {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin: 0;
+    font-size: 13px;
+    background: #00d911;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+.circle-img {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    margin-right: 14px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+    box-sizing: border-box;
+}
+#logoContainer {
+    width: 54px;
+    height: 54px;
+    background: var(--logo-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-sizing: border-box;
+}
+
+.more-btn-container {
+    padding: 0 12px calc(40px + env(safe-area-inset-bottom, 16px)) 16px;
+    background: var(--header-bg);
+    flex-shrink: 0;
+    margin-top: 0px;
+}
+.more-btn {
+    background: #0095f6;
+    color: #fff;
+    padding: 13px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px 10px 10px 10px;
+	padding-bottom: 25px;
+    box-sizing: border-box;
+}
+.popup-sheet {
+    width: 100%;
+	max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+.popup-group {
+    background: var(--popup-bg);
+    border: 1px solid var(--popup-border);
+    border-radius: 20px;
+    overflow: hidden;
+}
+.popup-item {
+    padding: 18px 16px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+    color: var(--popup-text);
+}
+.popup-item.red-text {
+    color: #e60000;
+}
+.popup-item:not(:last-child) {
+    border-bottom: 1px solid var(--popup-border);
+}
+.popup-cancel {
+    background: var(--popup-bg);
+    border: 1px solid var(--popup-border);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--popup-text);
+    cursor: pointer;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+#toastMessage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: rgba(20, 20, 22, 0.45);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    color: #ffffff;
+    padding: 16px 26px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 2000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+#toastMessage.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Screenshot-style Report screen */
+#page3 { background:#000 !important; color:#eee !important; }
+#page3 .header { background:#000 !important; border-bottom:1px solid #151515; min-height:46px; height:46px; padding:0 16px; }
+#page3 .title { color:#eee !important; font-size:18px; font-weight:600; }
+#page3 .page3-back { left:14px; color:#b7b7b7; }
+#page3 .report-menu-icon { position:absolute; right:15px; top:50%; transform:translateY(-50%); width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:#bdbdbd; }
+#page3 .status-bar { height:48px; min-height:48px; background:#4fbd20 !important; color:#ffffff !important; opacity:1 !important; font-size:14px; font-weight:500; }
+#page3 .report-content { padding:27px 28px 0 28px !important; background:#000; color:#eee; }
+#page3 .report-first-row { margin-bottom:18px !important; }
+#page3 .circle-img { width:66px; height:66px; margin-right:18px; border:0; background:#0b0b0b !important; }
+#page3 .report-first-text { font-size:14px !important; line-height:1.34 !important; color:#eee !important; }
+#page3 .report-first-text #disp-time { color:#8a8a8a !important; font-size:12px !important; }
+#page3 .report-divider { border-bottom:1px solid #101010 !important; margin-bottom:24px !important; }
+#page3 .report-result-row { gap:17px !important; margin-bottom:16px !important; }
+#page3 #logoContainer { width:66px; height:66px; min-width:66px; border:0; border-radius:50%; background:#fff !important; display:flex; align-items:center; justify-content:center; }
+#page3 #defaultIgIcon { width:46px; height:46px; display:block; }
+#page3 .report-result-text { padding-top:3px !important; }
+#page3 .report-result-text > div { color:#eee !important; font-size:14px !important; line-height:1.38 !important; }
+#page3 #disp-time-bottom { color:#8a8a8a !important; font-size:12px !important; }
+#page3 .report-bottom-divider { border-bottom:1px solid #111 !important; padding-bottom:8px !important; }
+#page3 .more-btn-container { background:#000 !important; padding:0 27px calc(22px + env(safe-area-inset-bottom,0px)) 27px !important; }
+#page3 .more-btn { background:#0787d9 !important; border-radius:5px; padding:14px 13px; font-size:14px; color:#fff; }
+#popupOverlay { background:rgba(0,0,0,.35); padding:0; align-items:flex-end; }
+#popupOverlay .popup-sheet { max-width:none; width:100%; gap:0; }
+#popupOverlay .popup-group {
+    border:1px solid #303033;
+    border-bottom:0;
+    border-radius:18px 18px 0 0;
+    background:#1d1d1f;
+    position:relative;
+    padding-top:10px;
+}
+#popupOverlay .popup-group::before {
+    content:"";
+    display:block;
+    width:38px;
+    height:4px;
+    margin:0 auto 6px auto;
+    border-radius:4px;
+    background:#6f6f73;
+}
+#popupOverlay .popup-item { color:#f2f2f2; text-decoration:none; text-align:left; padding:24px 27px; font-size:16px; font-weight:500; }
+#popupOverlay .popup-item.red-text { color:#ff453a; }
+#popupOverlay .popup-cancel { display:none; }
+
+
+/* Screenshot-style More Options sheet: only Community Guidelines */
+.community-only-group {
+    background: #1c1c1e;
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+}
+.community-guidelines-item {
+    color: #f2f2f7 !important;
+    text-decoration: none !important;
+    text-align: left !important;
+    padding: 18px 18px 22px 18px !important;
+    border-top:1px solid #303033 !important;
+    font-size: 16px !important;
+    font-weight: 500;
+}
+
+/* Screenshot-matched Reports list and report outcome page */
+#pageReports {background:#000 !important;color:#f5f5f5 !important;}
+#pageReports .header {background:#000 !important;color:#fff !important;border-bottom:1px solid #242424 !important;min-height:54px;padding:10px 20px !important;justify-content:flex-start !important;gap:24px;}
+#pageReports .title {color:#fff !important;font-size:21px !important;font-weight:750 !important;}
+#pageReports #report-list {background:#000 !important;padding:0 0 18px;}
+#pageReports .report-list-item,#pageReports .report-item,#pageReports .report-card,#pageReports #report-list > div {background:#000 !important;color:#f5f5f5 !important;border-bottom:1px solid #292929 !important;border-radius:0 !important;box-shadow:none !important;}
+#pageReports #report-list .status,#pageReports #report-list .report-status {color:#8e8e93 !important;font-weight:600;}
+#pageReports #report-list .received,#pageReports #report-list .status-received {color:#e89556 !important;}
+#pageReports #report-list .username,#pageReports #report-list .description,#pageReports #report-list .report-description {color:#f1f1f1 !important;}
+#page3,#pageReportDetail,#reportDetailPage {background:#000 !important;color:#f5f5f5 !important;}
+#page3 .header,#pageReportDetail .header,#reportDetailPage .header {background:#000 !important;color:#fff !important;border-bottom:0 !important;}
+#page3 .title,#pageReportDetail .title,#reportDetailPage .title {color:#fff !important;font-size:21px !important;font-weight:750 !important;} #page3 .report-menu-icon{display:none!important;} #page3 .more-btn-container{display:none!important;} #page3 .report-content{padding-top:0!important;}
+
+
+/* Remove the blue More Options button completely */
+.more-btn-container, .more-btn, #page3 .more-btn-container, #page3 .more-btn { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; }
+</style>
+
+<style id="report-slide-transitions">
+#page3, #reportTimelinePage {
+  will-change: transform;
+  transition: transform 260ms cubic-bezier(.22,.61,.36,1), opacity 260ms ease;
+  touch-action: pan-y;
+}
+#reportTimelinePage { transform: translate3d(100%,0,0); opacity: 1; }
+#reportTimelinePage.slide-in { transform: translate3d(0,0,0); }
+#reportTimelinePage.slide-out { transform: translate3d(100%,0,0); }
+#page3 { transition: transform 260ms cubic-bezier(.22,.61,.36,1), opacity 260ms ease; }
+#page3.slide-out-left { transform: translate3d(-24%,0,0); opacity:.72; }
+#page3.slide-in { transform: translate3d(0,0,0); opacity:1; }
+</style>
+
+
+<style id="manual-horizontal-swipe">
+#reportTimelinePage { touch-action: pan-y; overscroll-behavior-x: contain; }
+#page3 { touch-action: pan-y; }
+#reportTimelinePage.dragging, #page3.dragging { transition: none !important; }
+</style>
+
+
+<style id="report-back-swipe-fix">
+#reportTimelinePage, #page3 { touch-action: pan-y; will-change: transform; }
+#reportTimelinePage * { touch-action: pan-y; }
+#reportTimelinePage.dragging, #page3.dragging { transition: none !important; }
+</style>
+
+
+<style id="keep-report-action-black">
+/* Keep the "You reported this account" action dark/black, including while swiping. */
+#reportTimelinePage button,
+#reportTimelinePage a,
+#reportTimelinePage [role="button"] {
+  color: #111 !important;
+}
+#reportTimelinePage button:active,
+#reportTimelinePage a:active,
+#reportTimelinePage [role="button"]:active,
+#reportTimelinePage button:focus,
+#reportTimelinePage a:focus,
+#reportTimelinePage [role="button"]:focus {
+  color: #111 !important;
+  -webkit-tap-highlight-color: transparent;
+}
+</style>
+
+
+<style id="force-reported-account-black">
+#reportTimelinePage, #reportTimelinePage * { -webkit-tap-highlight-color: transparent; }
+#reportTimelinePage a,
+#reportTimelinePage a:link,
+#reportTimelinePage a:visited,
+#reportTimelinePage a:hover,
+#reportTimelinePage a:active,
+#reportTimelinePage button,
+#reportTimelinePage button:focus,
+#reportTimelinePage button:active,
+#reportTimelinePage [role="button"],
+#reportTimelinePage [role="button"]:focus,
+#reportTimelinePage [role="button"]:active,
+#page3 a, #page3 a:active, #page3 a:focus {
+  color: #111111 !important;
+}
+#page3 .reported-account, #page3 .report-action { color:#111111 !important; }
+</style>
+
+<style id="force-black-report-text-v2">
+#page3, #page3 *, #reportTimelinePage, #reportTimelinePage * { -webkit-tap-highlight-color: transparent; }
+#page3 a, #page3 a:link, #page3 a:visited, #page3 a:hover, #page3 a:active,
+#page3 button, #page3 button:focus, #page3 button:active, #page3 [role="button"],
+#page3 [role="button"]:focus, #page3 [role="button"]:active,
+#reportTimelinePage a, #reportTimelinePage a:link, #reportTimelinePage a:visited,
+#reportTimelinePage a:hover, #reportTimelinePage a:active,
+#reportTimelinePage button, #reportTimelinePage button:focus, #reportTimelinePage button:active,
+#reportTimelinePage [role="button"], #reportTimelinePage [role="button"]:focus,
+#reportTimelinePage [role="button"]:active {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+</style>
+
+
+<style id="minimal-report-heading-and-content-slide-fix">
+#pageReports > .header, #page3 > .header { position:relative !important; display:flex !important; align-items:center !important; justify-content:center !important; height:54px !important; min-height:54px !important; box-sizing:border-box !important; }
+#pageReports > .header .title, #page3 > .header .title { position:absolute !important; left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important; margin:0 !important; white-space:nowrap !important; text-align:center !important; }
+#reportTimelinePage { overflow:hidden !important; }
+#reportTimelinePage > div:first-child { position:absolute !important; left:0 !important; right:0 !important; top:0 !important; height:58px !important; z-index:5 !important; display:flex !important; align-items:center !important; justify-content:center !important; box-sizing:border-box !important; }
+#reportTimelinePage > div:first-child span:first-child { position:absolute !important; left:22px !important; }
+#reportTimelinePage > div:first-child span:last-child { position:absolute !important; left:50% !important; transform:translateX(-50%) !important; white-space:nowrap !important; }
+#reportTimelinePage #timelineContentWrap { position:absolute !important; top:58px !important; left:0 !important; right:0 !important; bottom:0 !important; height:auto !important; overflow-y:auto !important; overflow-x:hidden !important; box-sizing:border-box !important; will-change:transform; }
+</style>
+
+</head>
+
+<body>
+
+<div id="toastMessage"></div>
+
+<div id="pageHome" class="page-center-wrap active">
+<div class="container">
+<div class="top-heading">
+    𝐎𝐆 𝐍𝐎𝐓𝚰 𝐌𝐀𝐊𝐄𝐑🔌☠️
+</div>
+
+<label>Target Username</label>
+<input type="text" id="username" placeholder="username">
+
+<label>Report Reason</label>
+<select id="reason">
+<option>spam</option>
+<option>hate speech or symbol</option>
+<option>impersonation</option>
+<option>underage</option>
+<option>bullying and harassment</option>
+<option>violence or dangerous organisation</option>
+<option>nudity or sexual activity</option>
+<option>scam and fraud</option>
+<option>drugs</option>
+<option>suicide or self-injury</option>
+</select>
+
+<label>Report Time (e.g. 1m, 1h, 1d or 10 August)</label>
+<input type="text" id="reportTimeInput" placeholder="1m, 1h, 1d, 10 August">
+
+<label>Support Time (e.g. 1m, 1h, 1d or 12 August)</label>
+<input type="text" id="supportTimeInput" placeholder="1m, 1h, 1d, 12 August">
+
+<button id="submitBtn" type="button" onclick="saveAndGo()">GET NOTI</button>
+</div>
+</div>
+
+<div id="pageMenu" class="page-center-wrap">
+<div class="container">
+<div class="top-heading">
+    𝐒𝐄𝐋𝐄𝐂𝐓 𝐘𝐎𝐔𝐑 𝐏𝐅𝐏 𝐀𝐍𝐃 𝚰𝐆 𝐋𝐎𝐆𝐎
+</div>
+
+<div class="neon-circles-row">
+    <div class="neon-circle-group" onclick="document.getElementById('pfpInput').click()">
+        <div class="neon-circle">
+            <img id="previewPfp" style="display:none;">
+            <div class="plus-badge">+</div>
+        </div>
+        <div class="neon-circle-label">PFP</div>
+    </div>
+    <input type="file" id="pfpInput" accept="image/*" style="display:none" onchange="previewAsset(this, 'previewPfp')">
+
+    <div class="neon-circle-group" onclick="document.getElementById('logoInput').click()">
+        <div class="neon-circle">
+            <img id="previewLogo" style="display:none;">
+            <div class="plus-badge">+</div>
+        </div>
+        <div class="neon-circle-label">IG Logo</div>
+    </div>
+    <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="previewAsset(this, 'previewLogo')">
+</div>
+
+<button type="button" class="save-assets-btn" onclick="saveAssetsSync()">SAVE & SYNC</button>
+
+<div style="margin-top: 18px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 12px;">
+    <div style="font-size: 11px; color: var(--subtext-color); margin-bottom: 4px;">App Version v4.0.0</div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text-color);">
+        <span>made by @mx4xi</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.14-.261.26-.536.26l.191-3.05 5.55-5.018c.241-.219-.054-.341-.373-.121l-6.865 4.326-2.96-.924c-.64-.203-.654-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg>
+    </div>
+</div>
+</div>
+</div>
+
+<div id="pageReports" class="page">
+<div class="header">
+<span class="back-arrow" onclick="showPage('pageHome')" style="display:flex; align-items:center; justify-content:center;">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: scale(1.3);">
+        <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+</span>
+<span class="title" onclick="showPage('pageHome')" style="cursor:pointer;">Reports</span>
+</div>
+<div id="report-list" style="flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;"></div>
+</div>
+
+
+<div id="page3" class="page">
+ <div class="header">
+  <div class="page3-back" onclick="handlePage3Back()">
+   <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </div>
+  <div class="title">Reports</div>
+  <div class="report-menu-icon" aria-label="Report menu">
+   <svg width="31" height="31" viewBox="0 0 31 31" fill="none"><circle cx="7" cy="7" r="2.2" fill="currentColor"/><circle cx="7" cy="15.5" r="2.2" fill="currentColor"/><circle cx="7" cy="24" r="2.2" fill="currentColor"/><path d="M14 7H28M14 15.5H28M14 24H28" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>
+  </div>
+ </div>
+ <div class="report-content" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#000;color:#f5f5f5;padding:0 22px;">
+  <div style="padding-top:24px;text-align:center;">
+    <div id="disp-title-text" style="font-size:24px;line-height:1.22;font-weight:750;margin:0 auto 20px;max-width:620px;">This account was removed. Here's what else you can do.</div>
+    <div id="disp-msg-p1" style="font-size:17px;line-height:1.35;color:#a5a5ad;margin:0 auto 24px;max-width:620px;">Thanks for reporting this account. We've removed it from Instagram because it goes against our Community Standards.</div>
+    <div id="see-report-details" onclick="openReportTimeline()" style="font-size:17px;font-weight:650;color:#8295ff;cursor:pointer;margin-bottom:0;">See report details</div>
+    <div id="report-details-expanded" style="display:none;color:#aaa;padding:14px 0;">Report details · <span id="disp-reason"></span></div>
+  </div>
+  <div style="margin-top:62px;">
+    <div style="font-size:19px;font-weight:700;margin-bottom:25px;">Other tools that can help</div>
+    <div class="help-tool-row" onclick="showToast('Unfollow option selected')" style="display:flex;align-items:center;gap:16px;padding:0 0 22px;cursor:pointer;font-size:18px;">
+      <span style="width:27px;display:flex;align-items:center;"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="16" cy="7" r="3.5" stroke="#f1f1f1" stroke-width="1.8"/><path d="M9 21c.8-3.5 3.1-5.5 6.9-5.5 1.5 0 2.8.3 3.8 1" stroke="#f1f1f1" stroke-width="1.8" stroke-linecap="round"/><path d="M3 12h8" stroke="#f1f1f1" stroke-width="1.8" stroke-linecap="round"/><path d="M7 8l4 4-4 4" stroke="#f1f1f1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="flex:1;">Unfollow</span><span style="color:#19c66a;font-size:22px;">●</span><span style="font-size:27px;color:#8e8e93;">›</span>
+    </div>
+    <div class="help-tool-row" onclick="openCommunityGuidelines()" style="display:flex;align-items:center;gap:16px;padding:0 0 22px;cursor:pointer;font-size:18px;">
+      <span style="width:27px;display:flex;align-items:center;"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 2.8 24 6.5v7.2c0 6.1-4.1 9.9-10 12-5.9-2.1-10-5.9-10-12V6.5L14 2.8Z" stroke="#f1f1f1" stroke-width="1.8" stroke-linejoin="round"/><path d="m9 14 3.2 3.2 6.5-6.7" stroke="#f1f1f1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="flex:1;">Learn more about our Community Standards</span><span style="font-size:27px;color:#8e8e93;">›</span>
+    </div>
+    <div class="help-tool-row" onclick="showToast('Support information')" style="display:flex;align-items:flex-start;gap:16px;padding:0 0 22px;cursor:pointer;font-size:18px;">
+      <span style="width:27px;display:flex;align-items:center;"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 24s-10.5-6.4-10.5-13A5.8 5.8 0 0 1 14 7.8 5.8 5.8 0 0 1 24.5 11C24.5 17.6 14 24 14 24Z" stroke="#f1f1f1" stroke-width="1.8" stroke-linejoin="round"/></svg></span><span style="flex:1;">Get support<div style="font-size:15px;line-height:1.3;color:#a5a5ad;margin-top:5px;">There are tools and resources that can help you in difficult moments.</div></span><span style="font-size:27px;color:#8e8e93;">›</span>
+    </div>
+  </div>
+  <div id="disp-time" style="display:none;"></div><div id="disp-time-bottom" style="display:none;"></div>
+  <img id="disp-pfp" style="display:none;"><div id="logoContainer" style="display:none;"><svg id="defaultIgIcon"></svg><img id="customLogoImg" style="display:none;"></div>
+  <div id="disp-user" style="display:none;"></div>
+ </div>
+  <div class="report-bottom-divider" style="margin-top:auto;"></div>
+ </div>
+ 
+ <div class="more-btn-container">
+    <div class="more-btn" onclick="openPopup()">More Options</div>
+</div>
+</div>
+
+<div id="bottomDock" class="bottom-dock">
+    <div id="dockHome" class="dock-item active" onclick="showPage('pageHome')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Home</span>
+    </div>
+    <div id="dockMenu" class="dock-item" onclick="showPage('pageMenu')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <span>Menu</span>
+    </div>
+    <div id="dockDm" class="dock-item" onclick="showPage('pageReports')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+        <span>Reports</span>
+    </div>
+</div>
+
+<div id="popupOverlay" class="popup-overlay" onclick="closePopup(event)">
+    <div class="popup-sheet">
+        <div class="popup-group community-only-group">
+            <div class="popup-item community-guidelines-item" onclick="openCommunityGuidelines()">See Community Guidelines</div>
+        </div>
+    </div>
+</div>
+
+<script>
+let liveTimerInterval = null;
+let currentActiveUsername = '';
+let previousPageContext = 'pageReports';
+
+window.onload = function() {
+    loadSavedAssetsIntoPreviews();
+    initFullSwipeBack();
+};
+
+function previewAsset(input, previewId) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById(previewId);
+            img.src = e.target.result;
+            img.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function loadSavedAssetsIntoPreviews() {
+    const savedPfp = localStorage.getItem('global_pfp');
+    const savedLogo = localStorage.getItem('global_logo');
+    
+    if(savedPfp) {
+        const pfpImg = document.getElementById('previewPfp');
+        pfpImg.src = savedPfp;
+        pfpImg.style.display = 'block';
+    }
+    if(savedLogo) {
+        const logoImg = document.getElementById('previewLogo');
+        logoImg.src = savedLogo;
+        logoImg.style.display = 'block';
+    }
+}
+
+function parseCustomTime(timeStr) {
+    if (!timeStr) return null;
+    const original = String(timeStr).trim();
+    const lower = original.toLowerCase();
+    const monthsList = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+    if (monthsList.some(m => lower.includes(m))) return original;
+
+    // Match the unit word/suffix, not the letters inside words like "minutes".
+    const match = lower.match(/^\s*(\d+)\s*(seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d)?\s*$/i);
+    if (!match) return original;
+    const amount = Number(match[1]);
+    const unit = (match[2] || 'm').toLowerCase();
+    if (unit === 's' || unit.startsWith('sec')) return amount;
+    if (unit === 'h' || unit.startsWith('hr') || unit.startsWith('hour')) return amount * 3600;
+    if (unit === 'd' || unit.startsWith('day')) return amount * 86400;
+    return amount * 60;
+}
+
+function formatElapsedTime(totalSeconds) {
+    if(typeof totalSeconds !== 'number' || isNaN(totalSeconds)) {
+        return totalSeconds;
+    }
+
+    if(totalSeconds >= 7 * 86400) {
+        const dateObj = new Date(Date.now() - totalSeconds * 1000);
+        const day = dateObj.getDate();
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const monthName = months[dateObj.getMonth()];
+        return `${day} ${monthName}`; 
+    }
+    if(totalSeconds < 60) {
+        const s = Math.max(1, totalSeconds);
+        return s === 1 ? '1 second ago' : `${s} seconds ago`;
+    }
+    if(totalSeconds < 3600) {
+        const m = Math.floor(totalSeconds / 60);
+        return m === 1 ? '1 minute ago' : `${m} minutes ago`;
+    }
+    if(totalSeconds < 86400) {
+        const h = Math.floor(totalSeconds / 3600);
+        return h === 1 ? '1 hour ago' : `${h} hours ago`;
+    }
+    const d = Math.floor(totalSeconds / 86400);
+    return d === 1 ? '1 day ago' : `${d} days ago`;
+}
+
+function showPage(id){
+    if (liveTimerInterval) {
+        clearInterval(liveTimerInterval);
+        liveTimerInterval = null;
+    }
+
+    const targetId = id;
+    const targetEl = document.getElementById(targetId);
+
+    if(targetId === 'pageReports') {
+        updateStoredTimes();
+        const reports = JSON.parse(localStorage.getItem('my_reports_final') || '[]');
+        renderList(reports);
+    }
+
+    document.querySelectorAll('.page-center-wrap, #pageReports, #page3').forEach(p => {
+        p.classList.remove('active');
+        p.style.transform = '';
+        p.style.zIndex = '';
+        p.style.transition = '';
+        p.style.display = '';
+    });
+
+    if(targetEl) {
+        targetEl.classList.add('active');
+    }
+
+    const dock = document.getElementById('bottomDock');
+    document.querySelectorAll('.dock-item').forEach(item => item.classList.remove('active'));
+
+    if(targetId === 'pageHome') {
+        document.getElementById('dockHome').classList.add('active');
+        dock.style.display = 'flex';
+    } else if(targetId === 'pageMenu') {
+        document.getElementById('dockMenu').classList.add('active');
+        dock.style.display = 'flex';
+    } else {
+        dock.style.display = 'none';
+    }
+}
+
+function handlePage3Back() {
+    if (previousPageContext === 'pageHome') {
+        showPage('pageHome');
+    } else {
+        showPage('pageReports');
+    }
+}
+
+function initFullSwipeBack() {
+    let startX = 0;
+    let startY = 0;
+    let isTracking = false;
+    let isSwiping = false;
+    let rafId = null;
+
+    const page3 = document.getElementById('page3');
+
+    page3.addEventListener('touchstart', (e) => {
+        if (!page3.classList.contains('active')) return;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isTracking = true;
+        isSwiping = false;
+    }, { passive: true });
+
+    page3.addEventListener('touchmove', (e) => {
+        if (!isTracking || !page3.classList.contains('active')) return;
+        
+        const currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        const diffX = currentX - startX;
+        const diffY = currentY - startY;
+
+        if (!isSwiping) {
+            if (Math.abs(diffY) > Math.abs(diffX)) {
+                isTracking = false;
+                return;
+            }
+            if (diffX > 10) {
+                isSwiping = true;
+            }
+        }
+
+        if (isSwiping && diffX > 0) {
+            const activeBackEl = document.getElementById(previousPageContext === 'pageHome' ? 'pageHome' : 'pageReports');
+            
+            if (activeBackEl && activeBackEl.style.display !== 'flex') {
+                activeBackEl.style.display = 'flex';
+                activeBackEl.style.zIndex = '20';
+            }
+            page3.style.zIndex = '25';
+
+            page3.style.transition = 'none';
+            if(activeBackEl) activeBackEl.style.transition = 'none';
+
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(() => {
+                const translateAmt = Math.min(window.innerWidth, Math.max(0, diffX));
+                const progress = translateAmt / window.innerWidth;
+                
+                page3.style.transform = `translate3d(${translateAmt}px, 0, 0)`;
+                if(activeBackEl) {
+                    activeBackEl.style.transform = `translate3d(${(-30 + (progress * 30))}, 0, 0)`;
+                }
+            });
+        }
+    }, { passive: true });
+
+    page3.addEventListener('touchend', (e) => {
+        if (!isTracking || !page3.classList.contains('active')) return;
+        isTracking = false;
+        if (!isSwiping) return;
+        isSwiping = false;
+
+        if (rafId) cancelAnimationFrame(rafId);
+
+        const currentX = e.changedTouches[0].clientX;
+        const diffX = currentX - startX;
+        const progress = diffX / window.innerWidth;
+        const activeBackEl = document.getElementById(previousPageContext === 'pageHome' ? 'pageHome' : 'pageReports');
+
+        page3.style.transition = 'transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1)';
+        if(activeBackEl) activeBackEl.style.transition = 'transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1)';
+
+        if (progress > 0.2 || diffX > 70) {
+            page3.style.transform = 'translate3d(100%, 0, 0)';
+            if(activeBackEl) activeBackEl.style.transform = 'translate3d(0, 0, 0)';
+
+            setTimeout(() => {
+                if(previousPageContext === 'pageHome') {
+                    showPage('pageHome');
+                } else {
+                    showPage('pageReports');
+                }
+            }, 200);
+        } else {
+            page3.style.transform = 'translate3d(0, 0, 0)';
+            if(activeBackEl) activeBackEl.style.transform = 'translate3d(-30%, 0, 0)';
+
+            setTimeout(() => {
+                if(activeBackEl) {
+                    activeBackEl.classList.remove('active');
+                    activeBackEl.style.transform = '';
+                    activeBackEl.style.zIndex = '';
+                    activeBackEl.style.transition = '';
+                    activeBackEl.style.display = '';
+                }
+                page3.style.zIndex = '';
+                page3.style.transition = '';
+            }, 200);
+        }
+    });
+}
+
+function saveAssetsSync() {
+    const pfpFile = document.getElementById('pfpInput').files[0];
+    const logoFile = document.getElementById('logoInput').files[0];
+
+    const applySync = (pfpUrl, logoUrl) => {
+        if(pfpUrl !== null) localStorage.setItem('global_pfp', pfpUrl);
+        if(logoUrl !== null) localStorage.setItem('global_logo', logoUrl);
+
+        let reports = JSON.parse(localStorage.getItem('my_reports_final') || '[]');
+        const currentPfp = localStorage.getItem('global_pfp') || '';
+        const currentLogo = localStorage.getItem('global_logo') || '';
+
+        reports = reports.map(rep => {
+            if(currentPfp) rep.pfp = currentPfp;
+            if(currentLogo) rep.logo = currentLogo;
+            return rep;
+        });
+        localStorage.setItem('my_reports_final', JSON.stringify(reports));
+        alert('Assets saved & synced with all reports successfully!');
+    };
+
+    if (pfpFile) {
+        const readerPfp = new FileReader();
+        readerPfp.onload = function(e1) {
+            const pfpUrl = e1.target.result;
+            if (logoFile) {
+                const readerLogo = new FileReader();
+                readerLogo.onload = function(e2) { applySync(pfpUrl, e2.target.result); };
+                readerLogo.readAsDataURL(logoFile);
+            } else {
+                applySync(pfpUrl, null);
+            }
+        };
+        readerPfp.readAsDataURL(pfpFile);
+    } else if (logoFile) {
+        const readerLogo = new FileReader();
+        readerLogo.onload = function(e2) { applySync(null, e2.target.result); };
+        readerLogo.readAsDataURL(logoFile);
+    } else {
+        applySync(null, null);
+    }
+}
+
+function updateStoredTimes() {
+    let reports = JSON.parse(localStorage.getItem('my_reports_final') || '[]');
+    const now = Math.floor(Date.now() / 1000);
+    reports = reports.map(rep => {
+        if(!rep.createdAt) rep.createdAt = now;
+        const elapsed = now - rep.createdAt;
+        
+        if(typeof rep.reportBaseSec === 'number') {
+            rep.time = formatElapsedTime(rep.reportBaseSec + elapsed);
+        }
+        if(typeof rep.supportBaseSec === 'number') {
+            rep.supportTime = formatElapsedTime(rep.supportBaseSec + elapsed);
+        }
+        return rep;
+    });
+    localStorage.setItem('my_reports_final', JSON.stringify(reports));
+}
+
+function saveAndGo(){
+    const user = document.getElementById('username').value.trim() || 'reported account';
+    const reason = document.getElementById('reason').value;
+    const rawReportTime = document.getElementById('reportTimeInput').value.trim();
+    const rawSupportTime = document.getElementById('supportTimeInput').value.trim();
+    const now = Math.floor(Date.now() / 1000);
+
+    const reportSec = rawReportTime ? parseCustomTime(rawReportTime) : null;
+    const supportSec = rawSupportTime ? parseCustomTime(rawSupportTime) : null;
+    
+    const pfpUrl = localStorage.getItem('global_pfp') || '';
+    const logoUrl = localStorage.getItem('global_logo') || '';
+
+    const newReport = {
+        user, 
+        reason, 
+        rawReportTime,
+        rawSupportTime,
+        createdAt: now,
+        reportBaseSec: typeof reportSec === 'number' ? reportSec : null,
+        supportBaseSec: typeof supportSec === 'number' ? supportSec : null,
+        time: rawReportTime ? formatElapsedTime(typeof reportSec === 'number' ? reportSec : rawReportTime) : 'Just now',
+        supportTime: rawSupportTime ? formatElapsedTime(typeof supportSec === 'number' ? supportSec : rawSupportTime) : 'Just now', 
+        pfp: pfpUrl, 
+        logo: logoUrl
+    };
+    
+    let reports = JSON.parse(localStorage.getItem('my_reports_final') || '[]');
+    reports.unshift(newReport);
+    localStorage.setItem('my_reports_final', JSON.stringify(reports));
+    
+    showPage('pageReports');
+}
+
+function renderList(reports){
+    const listContainer = document.getElementById('report-list');
+    listContainer.innerHTML = '';
+
+    reports.forEach((data, index) => {
+        const created = Number(data.createdAt || 0);
+        const dateLabel = data.listDate || data.dateLabel || data.reportDate || (created ? new Date(created * 1000).toLocaleDateString(undefined, { day:'numeric', month:'long' }) : '');
+        const status = 'Closed';
+        const unread = data.unread ? '<span style="width:8px;height:8px;background:#617cff;border-radius:50%;display:inline-block;margin-right:8px;"></span>' : '';
+        listContainer.innerHTML += `
+        <div onclick="viewReport(${index})" style="display:flex;align-items:flex-start;padding:17px 21px 17px 22px;min-height:82px;cursor:pointer;background:#000;border-bottom:1px solid #292929;color:#f5f5f5;">
+          <div style="width:54px;height:54px;min-width:54px;border:1px solid #292929;border-radius:9px;margin-right:16px;display:flex;align-items:center;justify-content:center;box-sizing:border-box;">
+            <svg width="31" height="31" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#f0f0f0" stroke-width="1.8"/><path d="M4 20C5.5 16.5 8.5 15 12 15C15.5 15 18.5 16.5 20 20" stroke="#f0f0f0" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;text-align:left;">
+            <div style="font-size:14px;color:${status === 'Received' ? '#e89556' : '#8e8e93'};font-weight:600;margin:0 0 8px;">${status}<span style="color:#8e8e93;"> · ${dateLabel}</span></div>
+            <div style="font-size:18px;line-height:1.45;color:#f1f1f1;">You reported ${escapeHtml(data.user)}'s account</div>
+          </div>
+          <div style="display:flex;align-items:center;align-self:center;margin-left:9px;color:#8e8e93;font-size:27px;">${unread}›</div>
+        </div>`;
+    });
+}
+function viewReport(index, fromPage = 'pageReports'){
+    if (liveTimerInterval) clearInterval(liveTimerInterval);
+    previousPageContext = fromPage;
+
+    let reports = JSON.parse(localStorage.getItem('my_reports_final') || '[]');
+    const data = reports[index];
+    
+    if(data) {
+        window.currentReport = data;
+        window.currentReportIndex = index;
+        currentActiveUsername = data.user;
+
+        const updateDynamicTimes = () => {
+            const now = Math.floor(Date.now() / 1000);
+            if(!data.createdAt) data.createdAt = now;
+            const elapsed = now - data.createdAt;
+
+            let currentReportTime = data.time;
+            let currentSupportTime = data.supportTime;
+
+            if(typeof data.reportBaseSec === 'number') {
+                currentReportTime = formatElapsedTime(data.reportBaseSec + elapsed);
+            }
+            if(typeof data.supportBaseSec === 'number') {
+                currentSupportTime = formatElapsedTime(data.supportBaseSec + elapsed);
+            }
+
+            document.getElementById('disp-time').innerText = currentReportTime;
+            document.getElementById('disp-time-bottom').innerText = currentSupportTime;
+        };
+
+        updateDynamicTimes();
+        liveTimerInterval = setInterval(updateDynamicTimes, 1000);
+
+        const latestPfp = localStorage.getItem('global_pfp') || data.pfp || '';
+        const latestLogo = localStorage.getItem('global_logo') || data.logo || '';
+
+        const dispPfpEl = document.getElementById('disp-pfp');
+        if (latestPfp) {
+            dispPfpEl.src = latestPfp;
+            dispPfpEl.style.display = 'block';
+        } else {
+            dispPfpEl.src = '';
+        }
+
+        document.getElementById('disp-user').innerText = data.user + "'s account";
+        document.getElementById('disp-reason').innerText = data.reason;
+
+        const logoContainer = document.getElementById('logoContainer');
+        const defaultIgIcon = document.getElementById('defaultIgIcon');
+        const customLogoImg = document.getElementById('customLogoImg');
+
+        if(latestLogo) {
+            logoContainer.style.background = 'transparent';
+            defaultIgIcon.style.display = 'none';
+            customLogoImg.src = latestLogo;
+            customLogoImg.style.display = 'block';
+        } else {
+            logoContainer.style.background = '#ffffff';
+            defaultIgIcon.style.display = 'block';
+            customLogoImg.style.display = 'none';
+        }
+
+        if (document.getElementById('disp-title-text')) document.getElementById('disp-title-text').innerText = `This account was removed. Here's what else you can do.`;
+        if (document.getElementById('disp-msg-p1')) document.getElementById('disp-msg-p1').innerText = `Thanks for reporting ${data.user}'s account. We've removed it from Instagram because it goes against our Community Standards on ${data.reason}.`;
+        if (document.getElementById('disp-msg-p2')) document.getElementById('disp-msg-p2').innerText = '';
+
+        showPage('page3');
+    }
+}
+
+
+
+
+function fitTimelineConnector(){
+  const connector = document.getElementById('timelineConnector');
+  const upper = document.querySelector('#reportTimelinePage #timelineTopRow > div:first-child');
+  const lower = document.querySelector('#reportTimelinePage .timelineLowerIcon');
+  const wrap = document.getElementById('timelineContentWrap');
+  if(!connector || !upper || !lower || !wrap) return;
+  const upperRect = upper.getBoundingClientRect();
+  const lowerRect = lower.getBoundingClientRect();
+  const wrapRect = wrap.getBoundingClientRect();
+  const start = upperRect.bottom - wrapRect.top;
+  const end = lowerRect.top - wrapRect.top;
+  const iconCenter = upperRect.left + upperRect.width / 2 - wrapRect.left;
+  connector.style.left = iconCenter + 'px';
+  connector.style.top = start + 'px';
+  connector.style.height = Math.max(0, end - start) + 'px';
+}
+
+window.addEventListener('resize', fitTimelineConnector);
+
+function openReportTimeline(){
+  const page = document.getElementById('reportTimelinePage');
+  const detail = document.getElementById('page3');
+  const content = document.getElementById('timelineContentWrap');
+  const detailContent = detail && detail.querySelector('.report-content');
+  if(!page || !content) return;
+  const d = window.currentReport || (typeof reports !== 'undefined' ? reports[window.currentReportIndex || 0] : null);
+  const user = d ? (d.user || d.username || 'reported account') : 'reported account';
+  const reason = d ? (d.reason || 'Community Standards') : 'Community Standards';
+  const caseNo = d ? (d.caseNumber || d.case_number || String(Date.now()).slice(-17)) : String(Date.now()).slice(-17);
+  const removedTitle = document.getElementById('timeline-removed-title');
+  const removedP1 = document.getElementById('timeline-removed-p1');
+  if(removedTitle) removedTitle.textContent = `We've removed ${user}'s account because it goes against our Community Standards`;
+  if(removedP1) removedP1.textContent = `We've reviewed the account and found that it goes against our Community Standards on ${reason}.`;
+  const caseRemoved = document.getElementById('timeline-case-removed');
+  const caseReceived = document.getElementById('timeline-case-received');
+  if(caseRemoved) caseRemoved.textContent = `Case number: ${caseNo}`;
+  if(caseReceived) caseReceived.textContent = `Case number: ${caseNo}`;
+  const dateRemoved = document.getElementById('timeline-date-removed');
+  const dateReceived = document.getElementById('timeline-date-received');
+  // The lower "received" event uses the entered Report Time. When blank,
+  // use elapsed real time since this report was created. The upper event is
+  // always one minute earlier than the lower event.
+  const nowSec = Math.floor(Date.now() / 1000);
+  let lowerSeconds = null;
+  if(d && typeof d.reportBaseSec === 'number') {
+    lowerSeconds = d.reportBaseSec + Math.max(0, nowSec - Number(d.createdAt || nowSec));
+  } else if(d && d.rawReportTime) {
+    const parsed = parseCustomTime(d.rawReportTime);
+    if(typeof parsed === 'number') lowerSeconds = parsed;
+  } else {
+    lowerSeconds = Math.max(0, nowSec - Number((d && d.createdAt) || nowSec));
+  }
+  if(typeof lowerSeconds === 'number') {
+    if(dateReceived) dateReceived.textContent = formatElapsedTime(lowerSeconds);
+    if(dateRemoved) dateRemoved.textContent = lowerSeconds < 60 ? 'Just now' : formatElapsedTime(lowerSeconds - 60);
+  } else {
+    if(dateReceived) dateReceived.textContent = d && d.rawReportTime ? String(d.rawReportTime) : 'Just now';
+    if(dateRemoved) dateRemoved.textContent = d && d.rawSupportTime ? String(d.rawSupportTime) : 'Just now';
+  }
+  const thanks = document.getElementById('timeline-thanks');
+  if(thanks) thanks.textContent = 'Thank you for reporting this and helping us keep Instagram a safe and supportive community.';
+  page.style.display = 'block';
+  page.style.transform = 'none';
+  content.style.transition = 'none';
+  content.style.transform = 'translate3d(100%,0,0)';
+  if(detailContent){ detailContent.style.transition='transform 260ms cubic-bezier(.22,.61,.36,1), opacity 260ms ease'; detailContent.style.transform='translate3d(-24%,0,0)'; detailContent.style.opacity='.72'; }
+  page.getBoundingClientRect();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    content.style.transition='transform 260ms cubic-bezier(.22,.61,.36,1)';
+    content.style.transform='translate3d(0,0,0)';
+    if(detailContent) detailContent.style.opacity='1';
+  }));
+  setTimeout(fitTimelineConnector,40);
+}
+function closeReportTimeline(){
+  const page = document.getElementById('reportTimelinePage');
+  const detail = document.getElementById('page3');
+  const content = document.getElementById('timelineContentWrap');
+  const detailContent = detail && detail.querySelector('.report-content');
+  if(!page || !content) return;
+  content.style.transition='transform 220ms ease-out';
+  content.style.transform='translate3d(100%,0,0)';
+  if(detailContent){ detailContent.style.transition='transform 220ms ease-out, opacity 220ms ease-out'; detailContent.style.transform='translate3d(0,0,0)'; detailContent.style.opacity='1'; }
+  setTimeout(()=>{
+    page.style.display='none';
+    content.style.transition=''; content.style.transform='';
+    if(detailContent){ detailContent.style.transition=''; detailContent.style.transform=''; detailContent.style.opacity=''; }
+  },240);
+}
+
+function toggleReportDetails(){
+  const el = document.getElementById('report-details-expanded');
+  if(el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+function openCommunityGuidelines(){
+  showToast('Community Standards information');
+}
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+function openPopup() {
+    document.getElementById('popupOverlay').style.display = 'flex';
+}
+
+function closePopup(e) {
+    if(e.target.id === 'popupOverlay') {
+        document.getElementById('popupOverlay').style.display = 'none';
+    }
+}
+
+function closePopupForce() {
+    document.getElementById('popupOverlay').style.display = 'none';
+}
+
+function showToast(text) {
+    const toast = document.getElementById('toastMessage');
+    toast.innerText = text;
+    toast.classList.add('show');
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2200);
+}
+
+function handlePopupBlock() {
+    closePopupForce();
+    const targetUser = currentActiveUsername || 'username';
+    showToast(`${targetUser} was blocked`);
+}
+
+function handlePopupRestrict() {
+    closePopupForce();
+    const targetUser = currentActiveUsername || 'username';
+    showToast(`${targetUser} was restricted`);
+}
+
+function openCommunityGuidelines() {
+    closePopupForce();
+    window.open('https://transparency.fb.com/policies/community-standards/', '_blank');
+}
+</script>
+
+<div id="reportTimelinePage" style="display:none;position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;box-sizing:border-box;z-index:100;background:#000;color:#f2f2f2;overflow-y:auto;overflow-x:hidden;font-family:inherit;">
+  <div style="height:58px;display:flex;align-items:center;gap:24px;padding:0 22px;border-bottom:1px solid #151515;position:sticky;top:0;background:#000;z-index:2;">
+    <span onclick="closeReportTimeline()" style="font-size:32px;line-height:1;cursor:pointer;">‹</span>
+    <span style="font-size:21px;font-weight:750;">Reports</span>
+  </div>
+  <div id="timelineContentWrap" style="position:relative;padding:20px 22px 36px 22px;">
+    <div id="timelineConnector" aria-hidden="true" style="position:absolute;left:40px;top:0;height:0;width:2px;background:#34363a;z-index:1;pointer-events:none;"></div>
+    <div id="timelineTopRow" style="display:flex;gap:16px;position:relative;">
+      <div style="width:36px;min-width:36px;height:36px;display:flex;align-items:center;justify-content:center;margin-top:4px;position:relative;z-index:2;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-label="Instagram"><rect x="2.7" y="2.7" width="18.6" height="18.6" rx="5.2" stroke="#f2f2f2" stroke-width="1.8"/><circle cx="12" cy="12" r="4.3" stroke="#f2f2f2" stroke-width="1.8"/><circle cx="17.7" cy="6.5" r="1.15" fill="#f2f2f2"/></svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div id="timeline-date-removed" style="font-size:14px;color:#a0a0a5;font-weight:600;margin-bottom:8px;">23 July</div>
+        <div id="timeline-removed-title" style="font-size:18px;line-height:1.5;margin-bottom:14px;">We've removed this account because it goes against our Community Standards</div>
+        <div id="timeline-case-removed" style="font-size:16px;color:#8d8d93;margin-bottom:12px;">Case number: 18072116918440719</div>
+        <div id="timeline-removed-p1" style="font-size:16px;line-height:1.55;color:#929298;margin-bottom:12px;">We've reviewed the account and found that it goes against our Community Standards.</div>
+        <div style="font-size:16px;line-height:1.55;color:#929298;margin-bottom:12px;">We let the person know that their post has been removed, but not who reported it.</div>
+        <div style="font-size:16px;line-height:1.55;color:#929298;margin-bottom:34px;">Reports like yours are an important part of making Instagram a safe and welcoming place for everyone.</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;position:relative;">
+      
+      <div class="timelineLowerIcon" style="width:36px;min-width:36px;height:36px;display:flex;align-items:center;justify-content:center;margin-top:4px;box-sizing:border-box;position:relative;z-index:2;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-label="Instagram"><rect x="2.7" y="2.7" width="18.6" height="18.6" rx="5.2" stroke="#f2f2f2" stroke-width="1.8"/><circle cx="12" cy="12" r="4.3" stroke="#f2f2f2" stroke-width="1.8"/><circle cx="17.7" cy="6.5" r="1.15" fill="#f2f2f2"/></svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div id="timeline-date-received" style="font-size:14px;color:#a0a0a5;font-weight:600;margin-bottom:8px;">22 July</div>
+        <div style="font-size:18px;line-height:1.5;margin-bottom:14px;">We received your report</div>
+        <div id="timeline-case-received" style="font-size:16px;color:#8d8d93;margin-bottom:12px;">Case number: 18072116918440719</div>
+        <div style="font-size:16px;line-height:1.55;color:#929298;margin-bottom:12px;">We use our Community Standards to review reports. If we find that someone isn't following the guidelines, we can limit their actions on Instagram or disable their account.</div>
+        <div id="timeline-thanks" style="font-size:16px;line-height:1.55;color:#929298;margin-bottom:16px;">Thank you for reporting this and helping us keep Instagram a safe and supportive community.</div>
+        <div style="width:200px;height:200px;max-width:100%;background:#f4f4f4;color:#8e8e93;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;font-weight:400;line-height:1.5;">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-label="Content unavailable"><path d="M8.4 7.15C9.55 6.35 10.8 5.9 12.15 5.9c3.95 0 6.45 3.15 7.15 5.35" stroke="#a7a7ad" stroke-width="1.85" stroke-linecap="round"/><path d="M4.05 13.1c.25-.75.62-1.5 1.12-2.18" stroke="#a7a7ad" stroke-width="1.85" stroke-linecap="round"/><path d="M7.35 12.2c.15 2.75 2.05 5.35 4.8 6.1 1.35-.35 2.45-1.15 3.2-2.15" fill="#a7a7ad"/><path d="M4.1 3.05 20.15 20.2" stroke="#a7a7ad" stroke-width="1.9" stroke-linecap="round"/></svg>
+          <span>This content isn't<br>available.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script id="enable-report-page-swipe-script">
+(function enableReportPageSwipe(){
+  const timeline = document.getElementById('reportTimelinePage');
+  const detail = document.getElementById('page3');
+  const timelineContent = document.getElementById('timelineContentWrap');
+  const detailContent = detail && detail.querySelector('.report-content');
+  if(!timeline || !detail || !timelineContent) return;
+  let sx=0, sy=0, dx=0, active=null, tracking=false, horizontal=false;
+  const threshold=65;
+  function begin(e, el){
+    if(e.pointerType==='mouse' && e.button!==0) return;
+    sx=e.clientX; sy=e.clientY; dx=0; active=el; tracking=true; horizontal=false;
+    try { el.setPointerCapture(e.pointerId); } catch(_){}
+  }
+  function move(e){
+    if(!tracking || !active) return;
+    dx=e.clientX-sx; const dy=e.clientY-sy;
+    if(!horizontal){
+      if(Math.abs(dx)<8 && Math.abs(dy)<8) return;
+      if(Math.abs(dy)>Math.abs(dx)*1.15){ tracking=false; active=null; return; }
+      horizontal=true;
+    }
+    if(e.cancelable) e.preventDefault();
+    if(active===timelineContent){
+      timelineContent.style.transition='none';
+      timelineContent.style.transform=`translate3d(${Math.max(0,dx)}px,0,0)`;
+    } else if(active===detailContent){
+      // Keep the removed-account header fixed; content moves while swiping.
+      detailContent.style.transition='none';
+      detailContent.style.transform=`translate3d(${Math.min(0,dx)}px,0,0)`;
+    }
+  }
+  function finish(){
+    if(!active) return;
+    const el=active, moved=dx, horiz=horizontal;
+    tracking=false; active=null; horizontal=false;
+    if(el===timelineContent){
+      el.style.transition='transform 180ms ease-out';
+      if(horiz && moved>threshold){ el.style.transform='translate3d(100%,0,0)'; setTimeout(()=>closeReportTimeline(),180); }
+      else { el.style.transform='translate3d(0,0,0)'; setTimeout(()=>{el.style.transition='';},190); }
+    } else if(el===detailContent){
+      el.style.transition='transform 180ms ease-out';
+      if(horiz && moved < -threshold){ el.style.transform='translate3d(-24%,0,0)'; setTimeout(()=>openReportTimeline(),180); }
+      else { el.style.transform='translate3d(0,0,0)'; setTimeout(()=>{el.style.transition='';el.style.transform='';},190); }
+    }
+  }
+  [timelineContent,detailContent].filter(Boolean).forEach(el=>{
+    el.style.touchAction='pan-y';
+    el.addEventListener('pointerdown',e=>begin(e,el),{passive:true});
+    el.addEventListener('pointermove',move,{passive:false});
+    el.addEventListener('pointerup',finish,{passive:true});
+    el.addEventListener('pointercancel',finish,{passive:true});
+  });
+})();
+</script>
+
+
+<script id="account-removed-cancel-swipe">
+(function(){
+  let sx=0, sy=0, tracking=false;
+  function visible(el){
+    if(!el) return false;
+    const cs=getComputedStyle(el);
+    return cs.display!=='none' && cs.visibility!=='hidden' && el.getBoundingClientRect().width>0;
+  }
+  function findRemovedPage(){
+    const candidates=[...document.querySelectorAll('body *')].filter(el=>{
+      if(el.children.length>3) return false;
+      return (el.innerText||'').trim()==='Your account was removed';
+    });
+    return candidates.map(el=>el.closest('[id]')||el.parentElement).find(visible)||null;
+  }
+  document.addEventListener('touchstart',e=>{
+    if(!e.touches||e.touches.length!==1) return;
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY; tracking=true;
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(!tracking||!e.changedTouches||!e.changedTouches.length) return;
+    tracking=false;
+    const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)<85||Math.abs(dx)<Math.abs(dy)*1.25) return;
+    const removed=findRemovedPage();
+    if(dx>0 && removed && visible(removed)){
+      // Right-swipe cancels the removed-account view and returns to the previous view.
+      if(typeof window.closeReportTimeline==='function') window.closeReportTimeline();
+      else if(typeof window.goBack==='function') window.goBack();
+    }
+  },{passive:true});
+})();
+</script>
+
+</body>
+</html>
+
+<style id="requested-report-heading-and-swipe-fix">
+/* Match the removed-account header box to the final Reports page header. */
+#page3 > .header { height:58px !important; min-height:58px !important; flex:0 0 58px !important; }
+#page3 > .header .title { left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important; }
+/* Let the previous page show underneath while the final page content is dragged. */
+#reportTimelinePage { background:transparent !important; }
+#reportTimelinePage > div:first-child { background:#000 !important; }
+#reportTimelinePage #timelineContentWrap { background:#000 !important; }
+</style>
