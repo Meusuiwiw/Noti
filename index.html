@@ -5,18 +5,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#17191d" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0b0e15" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0e15" media="(prefers-color-scheme: dark)">
 <title>Instagram Report Tool</title>
 
 <style>
 :root {
-    --bg-color: #f5f6fa;
+    --bg-color: #0b0e15;
     --text-color: #111111;
     --subtext-color: #606060;
-    --header-bg: #ffffff;
+    --header-bg: #0b0e15;
     --border-color: rgba(0, 0, 0, 0.1);
-    --page1-bg: radial-gradient(circle at top, #e0e8ff 0%, #f5f6fa 70%);
+    --page1-bg: #0b0e15;
     --container-bg: rgba(255, 255, 255, 0.9);
     --container-border: #d1d5db;
     --input-bg: rgba(240, 240, 245, 0.9);
@@ -31,12 +31,12 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-color: #17191d;
+        --bg-color: #0b0e15;
         --text-color: #ffffff;
         --subtext-color: #8e8e93;
-        --header-bg: #17191d;
+        --header-bg: #0b0e15;
         --border-color: rgba(255, 255, 255, 0.15);
-        --page1-bg: #17191d;
+        --page1-bg: #0b0e15;
         --container-bg: rgba(16, 19, 24, 0.9);
         --container-border: rgba(255, 255, 255, 0.15);
         --input-bg: rgba(20, 20, 20, 0.9);
@@ -563,13 +563,13 @@ button#submitBtn, .save-assets-btn {
 }
 
 /* Screenshot-style Report screen */
-#page3 { background:#17191d !important; color:#eee !important; }
-#page3 .header { background:#17191d !important; border-bottom:1px solid #151515; min-height:46px; height:46px; padding:0 16px; }
+#page3 { background:#0b0e15 !important; color:#eee !important; }
+#page3 .header { background:#0b0e15 !important; border-bottom:1px solid #151515; min-height:46px; height:46px; padding:0 16px; }
 #page3 .title { color:#eee !important; font-size:18px; font-weight:600; }
 #page3 .page3-back { left:14px; color:#b7b7b7; }
 #page3 .report-menu-icon { position:absolute; right:15px; top:50%; transform:translateY(-50%); width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:#bdbdbd; }
 #page3 .status-bar { height:48px; min-height:48px; background:#4fbd20 !important; color:#ffffff !important; opacity:1 !important; font-size:14px; font-weight:500; }
-#page3 .report-content { padding:27px 28px 0 28px !important; background:#17191d; color:#eee; }
+#page3 .report-content { padding:27px 28px 0 28px !important; background:#0b0e15; color:#eee; }
 #page3 .report-first-row { margin-bottom:18px !important; }
 #page3 .circle-img { width:66px; height:66px; margin-right:18px; border:0; background:#0b0b0b !important; }
 #page3 .report-first-text { font-size:14px !important; line-height:1.34 !important; color:#eee !important; }
@@ -582,7 +582,7 @@ button#submitBtn, .save-assets-btn {
 #page3 .report-result-text > div { color:#eee !important; font-size:14px !important; line-height:1.38 !important; }
 #page3 #disp-time-bottom { color:#8a8a8a !important; font-size:12px !important; }
 #page3 .report-bottom-divider { border-bottom:1px solid #111 !important; padding-bottom:8px !important; }
-#page3 .more-btn-container { background:#17191d !important; padding:0 27px calc(22px + env(safe-area-inset-bottom,0px)) 27px !important; }
+#page3 .more-btn-container { background:#0b0e15 !important; padding:0 27px calc(22px + env(safe-area-inset-bottom,0px)) 27px !important; }
 #page3 .more-btn { background:#0787d9 !important; border-radius:5px; padding:14px 13px; font-size:14px; color:#fff; }
 #popupOverlay { background:rgba(0,0,0,.35); padding:0; align-items:flex-end; }
 #popupOverlay .popup-sheet { max-width:none; width:100%; gap:0; }
@@ -626,21 +626,28 @@ button#submitBtn, .save-assets-btn {
 }
 
 /* Screenshot-matched Reports list and report outcome page */
-#pageReports {background:#17191d !important;color:#f5f5f5 !important;}
-#pageReports .header {background:#17191d !important;color:#fff !important;border-bottom:1px solid #242424 !important;min-height:54px;padding:10px 20px !important;justify-content:flex-start !important;gap:24px;}
+#pageReports {background:#0b0e15 !important;color:#f5f5f5 !important;}
+#pageReports .header {background:#0b0e15 !important;color:#fff !important;border-bottom:1px solid #242424 !important;min-height:54px;padding:10px 20px !important;justify-content:flex-start !important;gap:24px;}
 #pageReports .title {color:#fff !important;font-size:21px !important;font-weight:750 !important;}
-#pageReports #report-list {background:#17191d !important;padding:0 0 18px;}
-#pageReports .report-list-item,#pageReports .report-item,#pageReports .report-card,#pageReports #report-list > div {background:#17191d !important;color:#f5f5f5 !important;border-bottom:1px solid #292929 !important;border-radius:0 !important;box-shadow:none !important;}
+#pageReports #report-list {background:#0b0e15 !important;padding:0 0 18px;}
+#pageReports .report-list-item,#pageReports .report-item,#pageReports .report-card,#pageReports #report-list > div {background:#0b0e15 !important;color:#f5f5f5 !important;border-bottom:1px solid #292929 !important;border-radius:0 !important;box-shadow:none !important;}
 #pageReports #report-list .status,#pageReports #report-list .report-status {color:#8e8e93 !important;font-weight:600;}
 #pageReports #report-list .received,#pageReports #report-list .status-received {color:#e89556 !important;}
 #pageReports #report-list .username,#pageReports #report-list .description,#pageReports #report-list .report-description {color:#f1f1f1 !important;}
-#page3,#pageReportDetail,#reportDetailPage {background:#17191d !important;color:#f5f5f5 !important;}
-#page3 .header,#pageReportDetail .header,#reportDetailPage .header {background:#17191d !important;color:#fff !important;border-bottom:0 !important;}
+#page3,#pageReportDetail,#reportDetailPage {background:#0b0e15 !important;color:#f5f5f5 !important;}
+#page3 .header,#pageReportDetail .header,#reportDetailPage .header {background:#0b0e15 !important;color:#fff !important;border-bottom:0 !important;}
 #page3 .title,#pageReportDetail .title,#reportDetailPage .title {color:#fff !important;font-size:21px !important;font-weight:750 !important;} #page3 .report-menu-icon{display:none!important;} #page3 .more-btn-container{display:none!important;} #page3 .report-content{padding-top:0!important;}
 
 
 /* Remove the blue More Options button completely */
 .more-btn-container, .more-btn, #page3 .more-btn-container, #page3 .more-btn { display:none !important; visibility:hidden !important; height:0 !important; min-height:0 !important; margin:0 !important; padding:0 !important; }
+
+/* Keep the reference dark background consistent across every page. */
+html, body, .screen, .page, .page-center-wrap, #pageReports, #page3,
+#page1, #page2, .page-content, .main-content {
+    background-color: #0b0e15 !important;
+}
+#page1 { background: #0b0e15 !important; }
 </style>
 
 <style id="report-slide-transitions">
@@ -756,7 +763,7 @@ button#submitBtn, .save-assets-btn {
 
 <div id="reportTextAdjuster" style="margin:14px 0 18px;padding:12px 14px;border:1px solid #454852;border-radius:12px;background:#202229;">
   <label for="reportDevicePreset" style="display:block;margin:0 0 7px;font-size:14px;">iPhone screen size</label>
-  <select id="reportDevicePreset" aria-label="Choose iPhone model" style="width:100%;padding:9px 10px;margin:0 0 12px;border:1px solid #454852;border-radius:8px;background:#0b0f12;color:#f5f5f6;font:inherit;font-size:13px;">
+  <select id="reportDevicePreset" aria-label="Choose iPhone model" style="width:100%;padding:9px 10px;margin:0 0 12px;border:1px solid #454852;border-radius:8px;background:#0b0e15;color:#f5f5f6;font:inherit;font-size:13px;">
     <option value="auto">Auto — use this phone's screen</option>
     <option value="80">iPhone 12 mini / 13 mini (small screen)</option>
     <option value="85">iPhone 11 Pro / 12 / 13 / 14</option>
@@ -857,7 +864,7 @@ button#submitBtn, .save-assets-btn {
    <svg width="31" height="31" viewBox="0 0 31 31" fill="none"><circle cx="7" cy="7" r="2.2" fill="currentColor"/><circle cx="7" cy="15.5" r="2.2" fill="currentColor"/><circle cx="7" cy="24" r="2.2" fill="currentColor"/><path d="M14 7H28M14 15.5H28M14 24H28" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>
   </div>
  </div>
- <div class="report-content" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#17191d;color:#f5f5f5;padding:0 22px;">
+ <div class="report-content" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#0b0e15;color:#f5f5f5;padding:0 22px;">
   <div style="padding-top:24px;text-align:center;">
     <div id="disp-title-text" style="font-size:24px;line-height:1.22;font-weight:750;margin:0 auto 20px;max-width:620px;">This account was removed. Here's what else you can do.</div>
     <div id="disp-msg-p1" style="font-size:17px;line-height:1.35;color:#a5a5ad;margin:0 auto 24px;max-width:620px;">Thanks for reporting this account. We've removed it from Instagram because it goes against our Community Standards.</div>
@@ -1470,8 +1477,8 @@ function openCommunityGuidelines() {
 }
 </script>
 
-<div id="reportTimelinePage" style="display:none;position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;box-sizing:border-box;z-index:100;background:#17191d;color:#f2f2f2;overflow-y:auto;overflow-x:hidden;font-family:inherit;">
-  <div style="height:58px;display:flex;align-items:center;gap:24px;padding:0 22px;border-bottom:1px solid #242424;position:sticky;top:0;background:#17191d;z-index:2;">
+<div id="reportTimelinePage" style="display:none;position:fixed;left:0;top:0;width:100%;height:100%;height:100dvh;box-sizing:border-box;z-index:100;background:#0b0e15;color:#f2f2f2;overflow-y:auto;overflow-x:hidden;font-family:inherit;">
+  <div style="height:58px;display:flex;align-items:center;gap:24px;padding:0 22px;border-bottom:1px solid #242424;position:sticky;top:0;background:#0b0e15;z-index:2;">
     <span onclick="closeReportTimeline()" style="font-size:32px;line-height:1;cursor:pointer;">‹</span>
     <span style="font-size:21px;font-weight:750;">Reports</span>
   </div>
@@ -1674,7 +1681,7 @@ function openCommunityGuidelines() {
 <style id="match-pasted-report-colors-fonts-and-smaller-unavailable">
 /* Match the supplied reference HTML's colors and system font on the final Reports page. */
 #reportTimelinePage, #reportTimelinePage #timelineContentWrap {
-  background: #0b0f12 !important;
+  background: #0b0e15 !important;
   color: #f5f5f6 !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
@@ -1695,7 +1702,43 @@ function openCommunityGuidelines() {
 }
 </style>
 
+<style id="reference-date-font-only">
+/* Use the reference image's light iOS-style font for dates only. */
+#reportTimelinePage #timeline-date-removed,
+#reportTimelinePage #timeline-date-received {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, sans-serif !important;
+  font-weight: 400 !important;
+}
+</style>
+
+<style id="final-page-slightly-compact-text">
+/* Slightly smaller, tighter typography on the final Reports timeline only. */
+#reportTimelinePage { --report-text-scale: .86 !important; }
+#reportTimelinePage #timelineContentWrap p,
+#reportTimelinePage #timelineContentWrap div[style*="font-size:16px"] {
+  line-height:1.46 !important;
+  margin-bottom:10px !important;
+}
+#reportTimelinePage #timeline-removed-title,
+#reportTimelinePage #timelineTopRow > div > div[style*="font-size:18px"],
+#reportTimelinePage #timelineContentWrap > div > div > div[style*="font-size:18px"] {
+  line-height:1.3 !important;
+  margin-bottom:14px !important;
+}
+#reportTimelinePage #timeline-case-removed,
+#reportTimelinePage #timeline-case-received { margin-bottom:11px !important; }
+</style>
+
 </body>
+
+<style id="stronger-dark-background-all-pages">
+/* Darker, consistent near-black background across all website screens. */
+html, body, .screen, #page1, #page2, #page3, #pageReportDetail, #reportDetailPage, #reportTimelinePage,
+#page1 .page, #page2 .page, #page3 .page, #page3 .report-content, #reportTimelinePage > div:first-child,
+#reportTimelinePage #timelineContentWrap { background-color:#0b0e15 !important; }
+#page3 .header, #pageReportDetail .header, #reportDetailPage .header,
+#reportTimelinePage > div:first-child { background-color:#0b0e15 !important; }
+</style>
 </html>
 
 <style id="requested-report-heading-and-swipe-fix">
@@ -1703,22 +1746,22 @@ function openCommunityGuidelines() {
 #page3 > .header { height:58px !important; min-height:58px !important; flex:0 0 58px !important; }
 #page3 > .header .title { left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important; }
 /* Keep the final Reports timeline fully opaque; the previous page is revealed by sliding the timeline panel itself. */
-#reportTimelinePage { background-color:#17191d !important; opacity:1 !important; }
-#reportTimelinePage > div:first-child { background-color:#17191d !important; opacity:1 !important; }
-#reportTimelinePage #timelineContentWrap { background-color:#17191d !important; opacity:1 !important; }
+#reportTimelinePage { background-color:#0b0e15 !important; opacity:1 !important; }
+#reportTimelinePage > div:first-child { background-color:#0b0e15 !important; opacity:1 !important; }
+#reportTimelinePage #timelineContentWrap { background-color:#0b0e15 !important; opacity:1 !important; }
 </style>
 
 <style id="all-pages-charcoal-background-fix">
-#page3, #page3 .report-content, #reportTimelinePage > div:first-child { background-color:#17191d !important; }
-#reportTimelinePage, #reportTimelinePage #timelineContentWrap { background-color:#17191d !important; opacity:1 !important; }
+#page3, #page3 .report-content, #reportTimelinePage > div:first-child { background-color:#0b0e15 !important; }
+#reportTimelinePage, #reportTimelinePage #timelineContentWrap { background-color:#0b0e15 !important; opacity:1 !important; }
 </style>
 
 <style id="final-page-full-opacity-swipe-fix">
 #page3, #page3.slide-out-left, #page3.slide-in { opacity:1 !important; }
-#page3 { background-color:#17191d !important; }
+#page3 { background-color:#0b0e15 !important; }
 </style>
 
 <style id="force-final-timeline-opaque">
-#reportTimelinePage, #reportTimelinePage #timelineContentWrap { background:#17191d !important; opacity:1 !important; }
+#reportTimelinePage, #reportTimelinePage #timelineContentWrap { background:#0b0e15 !important; opacity:1 !important; }
 #reportTimelinePage { will-change:transform; }
 </style>
