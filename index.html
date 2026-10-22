@@ -1312,12 +1312,10 @@ function viewReport(index, fromPage = 'pageReports'){
         const latestLogo = localStorage.getItem('global_logo') || data.logo || '';
 
         const dispPfpEl = document.getElementById('disp-pfp');
-        if (latestPfp) {
-            dispPfpEl.src = latestPfp;
-            dispPfpEl.style.display = 'block';
-        } else {
-            dispPfpEl.src = '';
-        }
+        // Keep the synced PFP out of the removed-account page's bottom area;
+        // it is displayed in the lower icon slot on the report timeline instead.
+        dispPfpEl.src = latestPfp || '';
+        dispPfpEl.style.display = 'none';
 
         document.getElementById('disp-user').innerText = data.user + "'s account";
         document.getElementById('disp-reason').innerText = data.reason;
@@ -1376,6 +1374,20 @@ function openReportTimeline(){
   const user = d ? (d.user || d.username || 'reported account') : 'reported account';
   const reason = d ? (d.reason || 'Community Standards') : 'Community Standards';
   const caseNo = d ? (d.caseNumber || d.case_number || String(Date.now()).slice(-17)) : String(Date.now()).slice(-17);
+  const syncedPfp = localStorage.getItem('global_pfp') || (d && d.pfp) || '';
+  const timelinePfp = document.getElementById('timelineLowerPfp');
+  const timelineDefaultIcon = document.getElementById('timelineLowerDefaultIcon');
+  if (timelinePfp && timelineDefaultIcon) {
+    if (syncedPfp) {
+      timelinePfp.src = syncedPfp;
+      timelinePfp.style.display = 'block';
+      timelineDefaultIcon.style.display = 'none';
+    } else {
+      timelinePfp.removeAttribute('src');
+      timelinePfp.style.display = 'none';
+      timelineDefaultIcon.style.display = 'block';
+    }
+  }
   const removedTitle = document.getElementById('timeline-removed-title');
   const removedP1 = document.getElementById('timeline-removed-p1');
   if(removedTitle) removedTitle.textContent = `We've removed ${user}'s account because it goes against our Community Standards`;
@@ -1498,8 +1510,9 @@ function openCommunityGuidelines() {
     </div>
     <div style="display:flex;gap:16px;position:relative;">
       
-      <div class="timelineLowerIcon" style="width:36px;min-width:36px;height:36px;display:flex;align-items:center;justify-content:center;margin-top:4px;box-sizing:border-box;position:relative;z-index:2;">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-label="Instagram"><rect x="2.7" y="2.7" width="18.6" height="18.6" rx="5.2" stroke="#f2f2f2" stroke-width="1.8"/><circle cx="12" cy="12" r="4.3" stroke="#f2f2f2" stroke-width="1.8"/><circle cx="17.7" cy="6.5" r="1.15" fill="#f2f2f2"/></svg>
+      <div class="timelineLowerIcon" style="width:36px;min-width:36px;height:36px;display:flex;align-items:center;justify-content:center;margin-top:4px;box-sizing:border-box;position:relative;z-index:2;overflow:hidden;border-radius:50%;">
+        <svg id="timelineLowerDefaultIcon" width="36" height="36" viewBox="0 0 24 24" fill="none" aria-label="Instagram"><rect x="2.7" y="2.7" width="18.6" height="18.6" rx="5.2" stroke="#f2f2f2" stroke-width="1.8"/><circle cx="12" cy="12" r="4.3" stroke="#f2f2f2" stroke-width="1.8"/><circle cx="17.7" cy="6.5" r="1.15" fill="#f2f2f2"/></svg>
+        <img id="timelineLowerPfp" alt="Profile picture" style="display:none;width:36px;height:36px;object-fit:cover;border-radius:50%;position:absolute;inset:0;" />
       </div>
       <div style="flex:1;min-width:0;">
         <div id="timeline-date-received" style="font-size:14px;color:#a0a0a5;font-weight:600;margin-bottom:8px;">22 July</div>
