@@ -1379,7 +1379,7 @@ function openReportTimeline(){
   const removedTitle = document.getElementById('timeline-removed-title');
   const removedP1 = document.getElementById('timeline-removed-p1');
   if(removedTitle) removedTitle.textContent = `We've removed ${user}'s account because it goes against our Community Standards`;
-  if(removedP1) removedP1.textContent = `We've reviewed the account and found that it goes against our Community Standards on ${reason}.`;
+  if(removedP1) removedP1.textContent = `We've reviewed the account and found that it goes against our Community Standards on ${reason}. We let the person know that their post has been removed, but not who reported it.`;
   const caseRemoved = document.getElementById('timeline-case-removed');
   const caseReceived = document.getElementById('timeline-case-received');
   if(caseRemoved) caseRemoved.textContent = `Case number: ${caseNo}`;
@@ -1493,7 +1493,6 @@ function openCommunityGuidelines() {
         <div id="timeline-removed-title" style="font-size:18px;line-height:1.5;margin-bottom:14px;">We've removed this account because it goes against our Community Standards</div>
         <div id="timeline-case-removed" style="font-size:16px;color:#8d8d93;margin-bottom:12px;">Case number: 18072116918440719</div>
         <div id="timeline-removed-p1" style="font-size:16px;line-height:1.55;color:#929298;margin-bottom:12px;">We've reviewed the account and found that it goes against our Community Standards.</div>
-        <div style="font-size:16px;line-height:1.55;color:#929298;margin-bottom:12px;">We let the person know that their post has been removed, but not who reported it.</div>
         <div style="font-size:16px;line-height:1.55;color:#929298;margin-bottom:34px;">Reports like yours are an important part of making Instagram a safe and welcoming place for everyone.</div>
       </div>
     </div>
@@ -1747,6 +1746,17 @@ function openCommunityGuidelines() {
   document.addEventListener('touchcancel',()=>{active=false;},{passive:true});
 })();
 </script>
+
+
+<style id="reduce-final-page-top-text-spacing">
+/* Only tighten the spacing in the upper text section of the final Reports page. */
+#reportTimelinePage #timelineTopRow #timeline-date-removed { margin-bottom: 5px !important; }
+#reportTimelinePage #timelineTopRow #timeline-removed-title { line-height: 1.35 !important; margin-bottom: 9px !important; }
+#reportTimelinePage #timelineTopRow #timeline-case-removed { margin-bottom: 8px !important; }
+#reportTimelinePage #timelineTopRow #timeline-removed-p1 { line-height: 1.45 !important; margin-bottom: 8px !important; }
+#reportTimelinePage #timelineTopRow > div:last-child > div[style*="font-size:16px"] { line-height: 1.45 !important; margin-bottom: 8px !important; }
+#reportTimelinePage #timelineTopRow > div:last-child > div[style*="margin-bottom:34px"] { margin-bottom: 24px !important; }
+</style>
 
 </body>
 
