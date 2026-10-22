@@ -755,6 +755,15 @@ button#submitBtn, .save-assets-btn {
 <input type="text" id="mainUsername" placeholder="your username">
 
 <div id="reportTextAdjuster" style="margin:14px 0 18px;padding:12px 14px;border:1px solid #454852;border-radius:12px;background:#202229;">
+  <label for="reportDevicePreset" style="display:block;margin:0 0 7px;font-size:14px;">iPhone screen size</label>
+  <select id="reportDevicePreset" aria-label="Choose iPhone model" style="width:100%;padding:9px 10px;margin:0 0 12px;border:1px solid #454852;border-radius:8px;background:#0b0f12;color:#f5f5f6;font:inherit;font-size:13px;">
+    <option value="auto">Auto — use this phone's screen</option>
+    <option value="80">iPhone 12 mini / 13 mini (small screen)</option>
+    <option value="85">iPhone 11 Pro / 12 / 13 / 14</option>
+    <option value="90">iPhone 11 / 15 / 16</option>
+    <option value="95">iPhone 17 / 18 / Pro models</option>
+    <option value="100">iPhone Plus / Pro Max (large screen)</option>
+  </select>
   <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;">
     <label for="reportTextScale" style="margin:0;font-size:14px;">Final page text size</label>
     <span id="reportTextScaleValue" style="font-size:13px;color:#d5d7df;min-width:42px;text-align:right;">90%</span>
@@ -1632,6 +1641,7 @@ function openCommunityGuidelines() {
 (function(){
   const slider=document.getElementById('reportTextScale');
   const label=document.getElementById('reportTextScaleValue');
+  const preset=document.getElementById('reportDevicePreset');
   const page=document.getElementById('reportTimelinePage');
   if(!slider||!label||!page)return;
   let saved=90;
@@ -1642,7 +1652,22 @@ function openCommunityGuidelines() {
     label.textContent=percent+'%';
     try { localStorage.setItem('reportTextScalePercent',String(percent)); } catch(e) {}
   }
-  slider.value=String(saved); slider.addEventListener('input',apply); apply();
+  function choosePreset(){
+    if(!preset || preset.value==='auto'){
+      const width=window.innerWidth;
+      slider.value=String(width<=360?80:width<=375?85:width<=393?90:width<=414?95:100);
+    } else slider.value=preset.value;
+    apply();
+  }
+  slider.value=String(saved);
+  slider.addEventListener('input',function(){ if(preset) preset.value='auto'; apply(); });
+  if(preset){
+    preset.addEventListener('change',choosePreset);
+    try { const savedPreset=localStorage.getItem('reportDevicePreset'); if(savedPreset && [...preset.options].some(o=>o.value===savedPreset)) preset.value=savedPreset; } catch(e) {}
+    if(preset.value==='auto') choosePreset(); else apply();
+    preset.addEventListener('change',function(){try{localStorage.setItem('reportDevicePreset',preset.value)}catch(e){}});
+  } else apply();
+  window.addEventListener('resize',function(){if(preset && preset.value==='auto') choosePreset();});
 })();
 </script>
 
