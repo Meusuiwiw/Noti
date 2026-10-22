@@ -754,6 +754,15 @@ button#submitBtn, .save-assets-btn {
 <label>Main Username</label>
 <input type="text" id="mainUsername" placeholder="your username">
 
+<div id="reportTextAdjuster" style="margin:14px 0 18px;padding:12px 14px;border:1px solid #454852;border-radius:12px;background:#202229;">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;">
+    <label for="reportTextScale" style="margin:0;font-size:14px;">Final page text size</label>
+    <span id="reportTextScaleValue" style="font-size:13px;color:#d5d7df;min-width:42px;text-align:right;">90%</span>
+  </div>
+  <input id="reportTextScale" type="range" min="70" max="110" step="5" value="90" aria-label="Final page text size" style="width:100%;accent-color:#a78bfa;">
+  <div style="display:flex;justify-content:space-between;color:#a7a9b2;font-size:11px;margin-top:4px;"><span>Smaller</span><span>Larger</span></div>
+</div>
+
 <label>Report Reason</label>
 <select id="reason">
 <option>spam</option>
@@ -1598,6 +1607,44 @@ function openCommunityGuidelines() {
 }
 </style>
 
+
+<style id="user-controlled-report-text-scale">
+#reportTimelinePage { --report-text-scale: .9; }
+#reportTimelinePage #timeline-removed-title,
+#reportTimelinePage #timelineTopRow > div > div[style*="font-size:18px"],
+#reportTimelinePage #timelineContentWrap > div > div > div[style*="font-size:18px"] {
+  font-size:calc(clamp(15px, 4.1vw, 18px) * var(--report-text-scale, 1)) !important;
+}
+#reportTimelinePage #timeline-case-removed,
+#reportTimelinePage #timeline-removed-p1,
+#reportTimelinePage #timeline-thanks,
+#reportTimelinePage #timeline-case-received,
+#reportTimelinePage #timelineContentWrap p,
+#reportTimelinePage #timelineContentWrap div[style*="font-size:16px"] {
+  font-size:calc(clamp(13px, 3.65vw, 16px) * var(--report-text-scale, 1)) !important;
+}
+#reportTimelinePage #timeline-date-removed,
+#reportTimelinePage #timeline-date-received {
+  font-size:calc(clamp(12px, 3.2vw, 14px) * var(--report-text-scale, 1)) !important;
+}
+</style>
+<script id="report-text-scale-controls">
+(function(){
+  const slider=document.getElementById('reportTextScale');
+  const label=document.getElementById('reportTextScaleValue');
+  const page=document.getElementById('reportTimelinePage');
+  if(!slider||!label||!page)return;
+  let saved=90;
+  try { const n=parseInt(localStorage.getItem('reportTextScalePercent'),10); if(Number.isFinite(n)) saved=Math.max(70,Math.min(110,n)); } catch(e) {}
+  function apply(){
+    const percent=parseInt(slider.value,10)||90;
+    page.style.setProperty('--report-text-scale',String(percent/100));
+    label.textContent=percent+'%';
+    try { localStorage.setItem('reportTextScalePercent',String(percent)); } catch(e) {}
+  }
+  slider.value=String(saved); slider.addEventListener('input',apply); apply();
+})();
+</script>
 </body>
 </html>
 
